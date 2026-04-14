@@ -1,0 +1,6 @@
+@MovieTimes.MinimalAPI_HostAddress = http://localhost:5115
+
+GET {{MovieTimes.MinimalAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
