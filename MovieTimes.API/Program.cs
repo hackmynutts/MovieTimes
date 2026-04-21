@@ -5,6 +5,7 @@ using MovieTimes.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRentalService, RentalService>();       // ← nuevo
 builder.Services.AddScoped<IRentalRepository, RentalRepository>(); // ← nuevo
 
+// Registrar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowUI", policy =>
@@ -31,6 +33,7 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
+
 });
 
 var app = builder.Build();
@@ -43,6 +46,8 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); ← COMENTADO
 app.UseCors("AllowUI");
+// app.UseHttpsRedirection(); ? COMENTADO, causaba el conflicto
+app.UseCors("AllowUI"); // ? CORS primero, siempre
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
