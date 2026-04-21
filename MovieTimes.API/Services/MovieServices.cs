@@ -25,7 +25,8 @@ namespace MovieTimes.API.Services
                 original_title = m.original_title,
                 overview = m.overview,
                 release_date = m.release_date,
-                poster_path = m.poster_path
+                poster_path = m.poster_path,
+                RentedByUserId = m.RentedByUserId
             }).ToList();
         }
 
@@ -56,8 +57,9 @@ namespace MovieTimes.API.Services
                 title = movie.title,
                 original_title = movie.original_title,
                 overview = movie.overview,
-                release_date = movie.release_date,
-                poster_path = movie.poster_path
+                release_date = DateOnly.Parse(movie.release_date),
+                poster_path = movie.poster_path,
+                RentedByUserId = movie.RentedByUserId
             };
             var newMovie = await _movieRepository.AddMovie(movieEntity);
             return new MovieDTO
@@ -68,7 +70,8 @@ namespace MovieTimes.API.Services
                 original_title = newMovie.original_title,
                 overview = newMovie.overview,
                 release_date = newMovie.release_date,
-                poster_path = newMovie.poster_path
+                poster_path = newMovie.poster_path,
+                RentedByUserId = newMovie.RentedByUserId
             };
         }
 
@@ -81,7 +84,7 @@ namespace MovieTimes.API.Services
                 title = movie.title,
                 original_title = movie.original_title,
                 overview = movie.overview,
-                release_date = movie.release_date,
+                release_date = DateOnly.Parse(movie.release_date),
                 poster_path = movie.poster_path
             };
             var newMovie = await _movieRepository.UpdateMovieAsync(movieEntity);

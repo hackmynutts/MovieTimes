@@ -23,7 +23,8 @@ namespace MovieTimes.UI.Controllers
         {
             if (email == "admin@retro.com" && password == "admin123")
             {
-                TempData["UserLogged"] = "ADMIN MASTER";
+                var userInfo = new { Id = 1, Nombre = "ADMIN MASTER" };
+                TempData["UserLogged"] = System.Text.Json.JsonSerializer.Serialize(userInfo);
                 TempData.Keep("UserLogged");
                 return RedirectToAction("Index", "Home");
             }
@@ -35,7 +36,8 @@ namespace MovieTimes.UI.Controllers
 
             if (usuarioEncontrado != null)
             {
-                TempData["UserLogged"] = usuarioEncontrado.Nombre;
+                var userInfo = new { Id = usuarioEncontrado.Id, Nombre = usuarioEncontrado.Nombre };
+                TempData["UserLogged"] = System.Text.Json.JsonSerializer.Serialize(userInfo);
                 TempData.Keep("UserLogged");
                 return RedirectToAction("Index", "Home");
             }

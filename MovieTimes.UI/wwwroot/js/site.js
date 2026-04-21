@@ -67,16 +67,16 @@ async function verDetalle(id) {
         const movieData = await responseTMDB.json();
 
         const movieToSave = {
-            id: parseInt(movieData.id),
+            tmdb_id: parseInt(movieData.id),
             title: movieData.title || "Sin título",
-            overview: movieData.overview || "Sin descripción",
-            release_Date: movieData.releaseDate || "2026-01-01",  
-            poster_Path: movieData.posterUrl || "",              
-            backdrop_Path: "",
-            vote_Average: parseFloat(movieData.rating) || 0        
+            original_title: movieData.title || "",
+            overview: movieData.overview || "",
+            release_date: movieData.releaseDate || "2026-01-01",  
+            poster_path: movieData.posterUrl || "",             
+            RentedByUserId: parseInt(userId)                   
         };
 
-        const res = await fetch('http://localhost:5024/api/Movie', {
+        const res = await fetch('/Movie/Create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(movieToSave)
