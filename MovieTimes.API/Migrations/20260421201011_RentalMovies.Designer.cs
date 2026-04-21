@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieTimes.API.Data;
 
@@ -11,9 +12,11 @@ using MovieTimes.API.Data;
 namespace MovieTimes.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260421201011_RentalMovies")]
+    partial class RentalMovies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,6 +94,8 @@ namespace MovieTimes.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MovieId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Rentals");
@@ -123,11 +128,19 @@ namespace MovieTimes.API.Migrations
 
             modelBuilder.Entity("MovieTimes.API.Models.Rental", b =>
                 {
+                    b.HasOne("MovieTimes.API.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MovieTimes.API.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Movie");
 
                     b.Navigation("User");
                 });

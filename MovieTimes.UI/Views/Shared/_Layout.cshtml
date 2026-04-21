@@ -20,22 +20,38 @@
             }
         }
         catch { user = null; }
-    }
 
+        bool isAdmin = user.HasValue &&
+        user.Value.GetProperty("Nombre").GetString() == "ADMIN MASTER";
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index" style="color: #ff00ff;">MoviesProject</a>
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index"
+                   style="color: #ff00ff;">MoviesProject</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Cartelera Disponible</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">
+                                Cartelera Disponible
+                            </a>
                         </li>
                         @if (user.HasValue)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Mantenimiento (Admin)</a>
+                                <a class="nav-link text-dark" asp-controller="Rental" asp-action="Index">
+                                    @(isAdmin ? " Todas las Reservas" : " Mis Reservas")
+                                </a>
                             </li>
+
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="User" asp-action="Index">
+                                        Mantenimiento (Admin)
+                                    </a>
+                                </li>
+                            }
                         }
                     </ul>
                     <ul class="navbar-nav">
@@ -47,13 +63,17 @@
                                 </span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-danger" asp-controller="User" asp-action="Logout">Salir</a>
+                                <a class="nav-link text-danger" asp-controller="User" asp-action="Logout">
+                                    Salir
+                                </a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-primary fw-bold" asp-controller="User" asp-action="Login">Iniciar Sesión</a>
+                                <a class="nav-link text-primary fw-bold" asp-controller="User" asp-action="Login">
+                                    Iniciar Sesión
+                                </a>
                             </li>
                         }
                     </ul>
@@ -63,8 +83,8 @@
     </header>
 
     <script>
-            const userId   = '@(user.HasValue ? user.Value.GetProperty("Id").GetInt32() : 0)';
-            const userName = '@(user.HasValue ? user.Value.GetProperty("Nombre").GetString() : "")';
+        const userId   = '@(user.HasValue? user.Value.GetProperty("Id").GetInt32() : 0)';
+        const userName = '@(user.HasValue? user.Value.GetProperty("Nombre").GetString() : "")';
     </script>
 
     <div class="container">

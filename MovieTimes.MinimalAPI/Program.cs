@@ -1,37 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
-//Registrar CORS
+// Registrar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowUI", policy =>
     {
-        policy.WithOrigins("https://localhost:7038")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "https://localhost:7038",
+            "http://localhost:5280"
+        )
+
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// ── ENDPOINT 1: Lista de películas (id + title) ──────────────
+// CORS debe ir primero, antes de cualquier otro middleware
+app.UseCors("AllowUI");
+
+// app.UseHttpsRedirection(); ← COMENTADO, causaba el conflicto HTTP/HTTPS
+app.UseAuthorization();
+app.MapControllers();
+
+// ── ENDPOINT 1: Lista de películas ──────────────────────────
 app.MapGet("/api/Movies/top-rated", async ([FromServices] IHttpClientFactory httpFactory, int page = 1) =>
 {
     var http = httpFactory.CreateClient();
-
-    // Agregar el Bearer Token así
     http.DefaultRequestHeaders.Authorization =
         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NWQzNmE5YzY2MzdmODE2OWUzOWM4ODg3NGM2NmQ1MSIsIm5iZiI6MTc3NTkzNjg1Mi4xMiwic3ViIjoiNjlkYWE1NTQ2YjAxNzRkYjkyMWQ5Mjk0Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.pSYjK2wx4vRet7Ex81P5UqJWD2F5zjr2gcqLK69T2Vs");
 
@@ -41,25 +53,21 @@ app.MapGet("/api/Movies/top-rated", async ([FromServices] IHttpClientFactory htt
 
     using var doc = JsonDocument.Parse(response);
     var results = doc.RootElement.GetProperty("results");
-
     var movies = results.EnumerateArray().Select(movie => new
     {
         id = movie.GetProperty("id").GetInt32(),
         title = movie.GetProperty("title").GetString(),
         overview = movie.GetProperty("overview").GetString(),
         posterUrl = movie.GetProperty("poster_path").GetString()
-    }).ToList(); // ← esto fuerza la ejecución ANTES de que doc se dispose
+    }).ToList();
 
     return Results.Ok(movies);
 });
 
-
-// ── ENDPOINT 2: Detalle de película por ID (para insertar a DB) ──
+// ── ENDPOINT 2: Detalle de película por ID ──────────────────
 app.MapGet("/api/Movies/{id}", async ([FromServices] IHttpClientFactory httpFactory, int id) =>
 {
     var http = httpFactory.CreateClient();
-
-    // Agregar el Bearer Token así
     http.DefaultRequestHeaders.Authorization =
         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NWQzNmE5YzY2MzdmODE2OWUzOWM4ODg3NGM2NmQ1MSIsIm5iZiI6MTc3NTkzNjg1Mi4xMiwic3ViIjoiNjlkYWE1NTQ2YjAxNzRkYjkyMWQ5Mjk0Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.pSYjK2wx4vRet7Ex81P5UqJWD2F5zjr2gcqLK69T2Vs");
 
@@ -69,8 +77,6 @@ app.MapGet("/api/Movies/{id}", async ([FromServices] IHttpClientFactory httpFact
 
     using var doc = JsonDocument.Parse(response);
     var movie = doc.RootElement;
-
-    // Solo la info que vas a insertar a DB
     var movieData = new
     {
         id = movie.GetProperty("id").GetInt32(),
@@ -83,18 +89,5 @@ app.MapGet("/api/Movies/{id}", async ([FromServices] IHttpClientFactory httpFact
 
     return Results.Ok(movieData);
 });
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-app.UseCors("AllowUI");
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
