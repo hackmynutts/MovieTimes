@@ -6,7 +6,7 @@
         public string title { get; set; } = string.Empty;
         public string original_title { get; set; } = string.Empty;
         public string overview { get; set; } = string.Empty;
-        public DateOnly release_date { get; set; } 
+        public string release_date { get; set; } = string.Empty;
         public string poster_path { get; set; } = string.Empty;
         public int RentedByUserId { get; set; } = 0;
     }
