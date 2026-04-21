@@ -1,0 +1,50 @@
+﻿@model List<MovieTimes.UI.Models.RentalDTO>
+
+@{
+    ViewData["Title"] = "Mis Reservas";
+    bool isAdmin = ViewBag.IsAdmin ?? false;
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2 class="animate__animated animate__pulse animate__infinite">
+            📼 @(isAdmin ? "TODAS LAS RESERVAS" : "MIS RESERVAS") 📼
+        </h2>
+        <p style="color: #00ffff;">@(isAdmin ? "PANEL DE ADMINISTRACIÓN" : $"HISTORIAL DE: {ViewBag.UserName}")</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center mt-5" style="color: #ff00ff; font-family: 'Courier New';">
+            <h4>⚠️ NO HAY RESERVAS REGISTRADAS</h4>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var rental in Model)
+            {
+                <div class="col-md-3 mb-5">
+                    <div class="card card-vhs h-100">
+                        <img src="https://image.tmdb.org/t/p/w500@rental.PosterUrl"
+                             class="card-img-top" alt="@rental.MovieTitle">
+                        <div class="card-body">
+                            <div class="vhs-label">@rental.MovieTitle</div>
+
+                            @if (isAdmin)
+                            {
+                                <p style="color: #ff00ff; font-size: 0.75rem; margin-top: 0.5rem;">
+                                    👤 @rental.UserName
+                                </p>
+                            }
+
+                            <p class="text-muted mt-1" style="font-size: 0.7rem;">
+                                🗓️ @rental.RentalDate.ToString("dd/MM/yyyy")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

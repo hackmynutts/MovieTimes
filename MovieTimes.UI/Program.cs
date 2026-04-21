@@ -13,6 +13,10 @@ builder.Services.AddHttpClient<IMovieServicesAPI, MovieServicesAPI>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
 });
+builder.Services.AddHttpClient<IRentalServicesAPI, RentalServicesAPI>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5024/api/");
+});
 
 var app = builder.Build();
 
