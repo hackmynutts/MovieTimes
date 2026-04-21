@@ -10,6 +10,7 @@ namespace MovieTimes.API.Data
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,7 +19,6 @@ namespace MovieTimes.API.Data
 
             modelBuilder.Entity<Movie>( entity =>
             {
-                entity.HasKey(e => e.id); // Configura 'id' como clave primaria
                 entity.Property(e => e.title).IsRequired(); // Configura 'title' como requerido
                 entity.Property(e => e.original_title).IsRequired(); // Configura 'original_title' como requerido
                 entity.Property(e => e.overview).IsRequired(); // Configura 'overview' como requerido

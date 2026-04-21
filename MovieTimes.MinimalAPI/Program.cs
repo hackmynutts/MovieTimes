@@ -12,6 +12,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
+//Registrar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowUI", policy =>
+    {
+        policy.WithOrigins("https://localhost:7038")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 
@@ -31,12 +42,13 @@ app.MapGet("/api/Movies/top-rated", async ([FromServices] IHttpClientFactory htt
     using var doc = JsonDocument.Parse(response);
     var results = doc.RootElement.GetProperty("results");
 
-    // Solo extraes id y title de cada película
-    var movies = results.EnumerateArray().Select(movie => new //itera cada película del array
+    var movies = results.EnumerateArray().Select(movie => new
     {
         id = movie.GetProperty("id").GetInt32(),
-        title = movie.GetProperty("title").GetString()
-    });
+        title = movie.GetProperty("title").GetString(),
+        overview = movie.GetProperty("overview").GetString(),
+        posterUrl = movie.GetProperty("poster_path").GetString()
+    }).ToList(); // ← esto fuerza la ejecución ANTES de que doc se dispose
 
     return Results.Ok(movies);
 });
@@ -80,7 +92,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowUI");
 app.UseAuthorization();
 
 app.MapControllers();

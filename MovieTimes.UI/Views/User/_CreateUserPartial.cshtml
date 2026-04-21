@@ -1,0 +1,48 @@
+﻿@model MovieTimes.UI.Models.UserAddDTO
+
+<form id="createUserForm" asp-action="Create" asp-controller="User" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Apellido" class="form-label"></label>
+        <input asp-for="Apellido" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" required />
+    </div>
+
+  
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Crear</button>
+    </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('createUserForm');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: '¿Crear usuario?',
+                    text: 'Se registrará un nuevo usuario',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
+    });
+</script>

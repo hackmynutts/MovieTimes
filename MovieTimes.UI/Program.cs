@@ -1,7 +1,14 @@
+using MovieTimes.UI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient<IUserServicesAPI, UserServicesAPI>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
+});
 
 var app = builder.Build();
 

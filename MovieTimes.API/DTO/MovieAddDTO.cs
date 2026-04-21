@@ -8,5 +8,6 @@
         public string overview { get; set; } = string.Empty;
         public DateOnly release_date { get; set; } 
         public string poster_path { get; set; } = string.Empty;
+        public int RentedByUserId { get; set; } = 0;
     }
 }

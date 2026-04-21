@@ -1,8 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Retro Video Club";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2 class="animate__animated animate__pulse animate__infinite">📼 VIDEO CLUB 80s 📼</h2>
+        <p style="color: #00ffff;">SISTEMA DE GESTIÓN DE RENTAS v1.0</p>
+    </div>
+
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-6 d-flex">
+            <input id="txtBuscar" class="retro-input w-100 me-2" type="number" placeholder="ID PELICULA...">
+            <button class="retro-btn" onclick="buscarPelicula()">BUSCAR</button>
+        </div>
+    </div>
+
+    <div id="contenedorPeliculas" class="row">
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
