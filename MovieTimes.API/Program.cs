@@ -18,8 +18,8 @@ builder.Services.AddScoped<IMovieServices, MovieServices>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRentalService, RentalService>();       // ← nuevo
-builder.Services.AddScoped<IRentalRepository, RentalRepository>(); // ← nuevo
+builder.Services.AddScoped<IRentalService, RentalService>();        
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();  
 
 // Registrar CORS
 builder.Services.AddCors(options =>
@@ -44,10 +44,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection(); ← COMENTADO
+
 app.UseCors("AllowUI");
-// app.UseHttpsRedirection(); ? COMENTADO, causaba el conflicto
-app.UseCors("AllowUI"); // ? CORS primero, siempre
+
+app.UseCors("AllowUI");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
