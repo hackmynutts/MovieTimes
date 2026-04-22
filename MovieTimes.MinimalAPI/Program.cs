@@ -36,11 +36,10 @@ if (app.Environment.IsDevelopment())
 // CORS debe ir primero, antes de cualquier otro middleware
 app.UseCors("AllowUI");
 
-// app.UseHttpsRedirection(); ← COMENTADO, causaba el conflicto HTTP/HTTPS
 app.UseAuthorization();
 app.MapControllers();
 
-// ── ENDPOINT 1: Lista de películas ──────────────────────────
+
 app.MapGet("/api/Movies/top-rated", async ([FromServices] IHttpClientFactory httpFactory, int page = 1) =>
 {
     var http = httpFactory.CreateClient();
@@ -64,7 +63,7 @@ app.MapGet("/api/Movies/top-rated", async ([FromServices] IHttpClientFactory htt
     return Results.Ok(movies);
 });
 
-// ── ENDPOINT 2: Detalle de película por ID ──────────────────
+
 app.MapGet("/api/Movies/{id}", async ([FromServices] IHttpClientFactory httpFactory, int id) =>
 {
     var http = httpFactory.CreateClient();
